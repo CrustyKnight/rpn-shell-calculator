@@ -1,0 +1,214 @@
+#+TITLE: RPN calculator for rockbox on ipod
+#+AUTHOR: Sam Cormode
+
+
+* URN-RPN
+This is a small lua project to create a mostly scientific postfix notation
+calculator for the shell. This comes from a project for an ipod that failed
+because of not having floating number support.
+
+I still plan on using the same interface, just with a few tweaks
+
+This is a work in progress, most of the stuff below is planning
+
+* Interface
+So basically, you will just need to use the 8 home row keys your fingers
+naturally rest on.
+** Layered input system
+5 buttons, one is select
+1st layer -> button for digit input, button for symbol input, button for enter
+*** Symbol Input
+while in a layer, the keys for each layer are shown somewhere or the screen
+
+"Layers"
+Center button is next layer
+1. basic operations (+ - * /)
+2. other stuff (^ sqrt sq inv)
+  (exponent, square root, square, inverse(1/x))
+3. trig stuff (sin, cos, tan, trig2)
+   1. trig2 (asin, acos, atan, nil)
+4. Logamarithic (log, inverse_log, ln, inverse_ln)
+   (Log, 10^x, Ln, e^x)
+5. (factorial function)
+Attempting to go to 6th layer exits
+
+* Language of choice?
+So, I have to use a lua lang, or one that can compile to lua.
+I know of moonscript (my usual), lua, and fennel, and can find some more.
+So, I want to use oczor or haxe, but perhaps fennel.
+Fennel is the only one I know.
+Maybe Urn? also a lisp, more influenced by cl
+
+Definately Urn. It just seems more like cl then fennel
+
+* Mockups
+#+attr_html: :width 200
+[[./imgs/mockup1.jpg]]
+#+attr_html: :width 200
+[[./imgs/mockup2.jpg]]
+** Text mockup
+Dimensions are I think 39x16 (WxH)
+*** Basic layout
+#+BEGIN_SRC
++----------------------------+---------+
+|                            |         |
+|                            |         |
+|                            |         |
+|                            |         |
+|                            |         |
+|                            |         |
+|                            |         |
+|                            |         |
+|                            |         |
+|                            |         |
+|                            |         |
+|                            |         |
+|                            |         |
+|----------------------------+---------+
+|                            |         |
++--------------------------------------+
+#+END_SRC
+*** Help menu
+#+BEGIN_SRC
++----------------------------+--------+
+|                            |        |
+|          shshs             |        |
+|                            |        |
+|                            |        |
+|                            |        |
+|                            |        |
+|   shshs          shshs     |        |
+|                            |        |
+|                            |        |
+|                            |        |
+|                            |        |
+|           shshs            |        |
+|                            |        |
+|----------------------------+--------+
+|                            |        |
++-------------------------------------+
+#+END_SRC
+*** Home screen (filled in with stacks)
+#+BEGIN_SRC
++----------------------------+---------+
+| ***                        |      ** |
+| ***                        |       * |
+| ***                        |       * |
+| ***                        |      ** |
+| ***                        |     *** |
+| ***                        |       * |
+| ***                        |      ** |
+| ***                        |       * |
+| ***                        |      ** |
+| ***                        |      ** |
+| ***                        |       * |
+| ***                        |     *** |
+| ***                        |       * |
+|----------------------------+---------+
+|                            |         |
++--------------------------------------+
+#+END_SRC
+* Features
+- P1 Digit entry
+- P1 stack
+- P2 Symbol entry
+- P2 basic operations
+- P2 Evaluation
+- P3 History
+- P3 layer/sybol input help
+- P3 all scientific commands
+* Programming Stuff
+** Stack init
+#+BEGIN_SRC common-lisp
+(define stack '())
+#+END_SRC
+** Op functions
+*** L1
+**** Add
+#+BEGIN_SRC common-lisp
+(defun add (stack)
+  (push! stack (+ (pop-last! stack)(pop-last! stack))))
+#+END_SRC
+**** Subtract
+#+BEGIN_SRC common-lisp
+(defun sub (stack)
+  (let [(b (pop-last! stack)) (a (pop-last! stack))]
+       (push! stack (- a b))))
+#+END_SRC
+**** Mult
+#+BEGIN_SRC common-lisp
+(defun mult (stack)
+  (push! stack (* (pop-last! stack)(pop-last! stack))))
+#+END_SRC
+**** Div
+#+BEGIN_SRC common-lisp
+(defun div (stack)
+  (let [(b (pop-last! stack)) (a (pop-last! stack))]
+  (push! stack (\ a b))))
+#+END_SRC
+*** L2
+**** Exponent
+#+BEGIN_SRC common-lisp
+(defun exp (stack)
+  (let [(b (pop-last! stack)) (a (pop-last! stack))]
+       (push! stack (expt b a))))
+#+END_SRC
+**** Sqrt
+#+BEGIN_SRC common-lisp
+(defun sqrt (stack)
+  (let [(b (pop-last! stack)) (a (pop-last! stack))]
+       (push! stack (math/sqrt b a))))
+#+END_SRC
+**** Square
+#+BEGIN_SRC common-lisp
+(defun sqrt (stack) (push! (expt (pop-last! stack) 2)))
+#+END_SRC
+**** Inverse
+#+BEGIN_SRC common-lisp
+(defun sqrt (stack) (push! (\ 1 (pop-last! stack))))
+#+END_SRC
+
+*** L3
+**** sin
+#+BEGIN_SRC common-lisp
+(defun sin (stack) (push! (math/sin (pop-last! stack))))
+#+END_SRC
+**** cos
+#+BEGIN_SRC common-lisp
+(defun cos (stack) (push! (math/cos (pop-last! stack))))
+#+END_SRC
+**** tan
+#+BEGIN_SRC common-lisp
+(defun tan (stack) (push! (math/tan (pop-last! stack))))
+#+END_SRC
+*** Trig 2
+**** asin
+#+BEGIN_SRC common-lisp
+(defun asin (stack) (push! (math/asin (pop-last! stack))))
+#+END_SRC
+**** acos
+#+BEGIN_SRC common-lisp
+(defun acos (stack) (push! (math/acos (pop-last! stack))))
+#+END_SRC
+**** atan
+#+BEGIN_SRC common-lisp
+(defun atan (stack) (push! (math/atan (pop-last! stack))))
+#+END_SRC
+
+*** L4
+**** Log_10
+#+BEGIN_SRC common-lisp
+(defun log10 (stack) (push! (math/log (pop-last! stack) 10)))
+#+END_SRC
+**** Log-Inverse
+#+BEGIN_SRC common-lisp
+(defun log10-inverse (stack) (push! (expt 10 (pop-last! stack))))
+#+END_SRC
+**** Natural log
+#+BEGIN_SRC common-lisp
+(defun ln (stack) (push! (math/log (pop-last! stack))))
+#+END_SRC
+**** Ln-Inverse
+#+BEGIN_SRC common-lisp
+(defun ln-inverse (stack) (push! (math/exp (pop-last! stack))))
+#+END_SRC
