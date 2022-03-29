@@ -1,9 +1,3 @@
-;; probably gonna have a main loop
-;; (loop [
-;;      ;; where vars I might want to define go
-;;      ]
-;;      [nil nil]
-;;      (print! "hi!"))
 (defmacro while-true (&body)
   `(while true (progn ,@body)))
 
@@ -21,14 +15,54 @@
   (set! mode (.> _G nmode)))
 
 (defun ps (x y msg) (io/write (string/format "[%d;%df%s" y x msg)))
-(defun get-key () (io/read 1))
+;old(defun get-key () (with (a (io/read 1)) (io/read 1) a)); the extra io/read is to get rid of the newline
+(defun get-key () (io/read :*l))
+(defun sc (x y) (io/write (string/format "[%d;%df" y x)))
+(defun cls () (io/write "[2J"))
 (defun do_menu (title options) (print! "working on menu"))
 
+(define v_line  :mutable "|")
+(define h_line1 :mutable "+----------------------------+---------+")
+(define h_line2 :mutable "+----------------------------+---------+")
+(define h_line3 :mutable "+----------------------------+---------+")
+
+(if (= (.> *arguments* 1) "-u")
+    (progn
+      (set! v_line "│" )
+      (set! h_line1 "┌────────────────────────────┬─────────┐")
+      (set! h_line2 "├────────────────────────────┼─────────┤")
+      (set! h_line3 "└────────────────────────────┴─────────┘"))
+    nil)
+
+;{{{ buttons table
 (define buttons :mutable {})
-(.<! buttons :EXIT "e")
-(.<! buttons :NUM  "a")
-(.<! buttons :SYM  "s")
-(.<! buttons :MENU "h")
+(progn
+  (.<! buttons :EXIT "e")
+  (.<! buttons :NUM  "a")
+  (.<! buttons :SYM  "s")
+  (.<! buttons :MENU "h")
+  (.<! buttons 1 "a")
+  (.<! buttons 2 "o")
+  (.<! buttons 3 "e")
+  (.<! buttons 4 "u")
+  (.<! buttons 5 "h")
+  (.<! buttons 6 "t")
+  (.<! buttons 7 "n")
+  (.<! buttons 8 "s")
+  (.<! buttons :ENTER " "))
+
+(define numbers :mutable {})
+(progn
+  (.<! numbers "a" 16)
+  (.<! numbers "o" 12)
+  (.<! numbers "e" 8)
+  (.<! numbers "u" 4)
+  (.<! numbers "h" 1)
+  (.<! numbers "t" 2)
+  (.<! numbers "n" 3)
+  (.<! numbers "s" 4))
+
+;}}}
 
 ; stack is just a list. end of the list is the top of the stack
 ; area is a list with for values: '(x y width height)
@@ -49,42 +83,70 @@
          (y (nth area 2))
          (w (nth area 3))
          (h (nth area 4)))
-    (with (start (- (+ 1 (n stack)) h))
+    ;(with (start (- (+ 1 (n stack)) h))
+    (with (start (- (n stack) h))
           (for i start (n stack) 1
-               (if (> (string/len (tostring (nth stack i))) w)
-                   (ps x (- i start)
+               (if (< (string/len (tostring (nth stack i))) w)
+                   (ps x (+ y (- i start))
                        (string/format (.. "%" w "d") (nth stack i)))
-                   (ps x (- i start)
+                   (ps x (+ y (- i start))
                        (string/format (.. "%1." (- w 7) "e") (nth stack i)))
 
                    )))))
 
+;returns a digit
+;; basically, the first four characters (a o e u) are the first base 4 digit, and the second four (h t n s) are the second digit
+(defun number_entry ()
+  (with (str (io/read :*l))
+        (let [
+          (a (string/sub str 1 1))
+          (b (string/sub str 2 2))]
+          (print! a b)
+          (+ (.> numbers a) (.> numbers b)))
+        ))
+
+
+
 (define stack :mutable '())
-(push! stack 1)
-(push! stack 2)
-(push! stack 3)
-(push! stack 4)
-(push! stack 5)
-(push! stack 6)
-(push! stack 7)
-(push! stack 8)
-(push! stack 9)
-(push! stack 10)
+(progn
+  (push! stack 0)
+  (push! stack 0)
+  (push! stack 0)
+  (push! stack 0)
+  (push! stack 0)
+  (push! stack 0)
+  (push! stack 0)
+  (push! stack 0)
+  (push! stack 0)
+  (push! stack 0)
+  (push! stack 0)
+  (push! stack 0)
+  (push! stack 0))
+
+(define entry-number :mutable "0")
 
 (define home {})
 (.<! home (.> buttons :SYM)
-     (lambda () (print!  :symbol)))
+     (lambda () nil))
 (.<! home (.> buttons :NUM)
-     (lambda () (print! :number)))
+     (lambda () (set! entry-number (.. entry-number (tostring (number_entry))))))
+(.<! home (.> buttons :ENTER)
+     (lambda () (push! stack (tonumber entry-number)) (set! entry-number "0")))
 (.<! home :draw
      (lambda () (progn
                   ;(ps x y msg)
-                  (for i 1 15 1 (ps 0 i "│"))
-                  (for i 1 15 1 (ps 29 i "│"))
-                  (for i 1 15 1 (ps 39 i "│"))
-                  (ps 0 0  "┌────────────────────────────┬─────────┐")
-                  (ps 0 14 "├────────────────────────────┼─────────┤")
-                  (ps 0 16 "└────────────────────────────┴─────────┘"))))
+                  (cls)
+                  (for i 1 15 1 (ps 0 i v_line))
+                  (for i 1 15 1 (ps 30 i v_line))
+                  (for i 1 15 1 (ps 40 i v_line))
+                  (ps 0 0  h_line1)
+                  (ps 0 14 h_line2)
+                  (ps 0 16 h_line3)
+                  (print_nstack_r stack '(31 2 9 11))
+                  (ps 2 15 (string/format "%27d" (tonumber entry-number)))
+                  (sc 31 15))))
+
+
 
 (set! mode home)
 
@@ -100,11 +162,11 @@
 
 
 
+((.> mode :draw))
 (while-true
  (let* [(action (get-key))]
    (cond
      ((= action (.> buttons :EXIT)) ((.> (require :os) :exit)))
-     ;;((= action (.> buttons :CANCEL)) (menu))
      ((= action (.> buttons :MENU)) (print! "still working on menu :)"))
      ((.> mode action) ((.> mode action)))
      (true nil))
