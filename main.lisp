@@ -34,7 +34,6 @@
       (set! h_line3 "└────────────────────────────┴─────────┘"))
     nil)
 
-;{{{ buttons table
 (define buttons :mutable {})
 (progn
   (.<! buttons :EXIT "e")
@@ -62,7 +61,35 @@
   (.<! numbers "n" 3)
   (.<! numbers "s" 4))
 
-;}}}
+
+(define func_symbols '(
+                       '("add" "min"  "mul" "div"  "pow"  "sqrt"  "sqr"  "inv")
+                       '("sin" "cos"  "tan" "_NIL" "asin" "acos" "atan" "_NIL")
+                       '("log" "10xp" "ln"  "exp"  "fac"  "_NIL" "_NIL" "_NIL")))
+(define symbol_funcs :mutable {})
+(progn
+  (.<! symbol_funcs "add"  (lambda (stack) nil))
+  (.<! symbol_funcs "min"  (lambda (stack) nil))
+  (.<! symbol_funcs "mul"  (lambda (stack) nil))
+  (.<! symbol_funcs "div"  (lambda (stack) nil))
+  (.<! symbol_funcs "pow"  (lambda (stack) nil))
+  (.<! symbol_funcs "sqrt" (lambda (stack) nil))
+  (.<! symbol_funcs "sqr"  (lambda (stack) nil))
+  (.<! symbol_funcs "inv"  (lambda (stack) nil))
+  (.<! symbol_funcs "sin"  (lambda (stack) nil))
+  (.<! symbol_funcs "cos"  (lambda (stack) nil))
+  (.<! symbol_funcs "tan"  (lambda (stack) nil))
+  (.<! symbol_funcs "asin" (lambda (stack) nil))
+  (.<! symbol_funcs "acos" (lambda (stack) nil))
+  (.<! symbol_funcs "atan" (lambda (stack) nil))
+  (.<! symbol_funcs "log"  (lambda (stack) nil))
+  (.<! symbol_funcs "10xp" (lambda (stack) nil))
+  (.<! symbol_funcs "ln"   (lambda (stack) nil))
+  (.<! symbol_funcs "exp"  (lambda (stack) nil))
+  (.<! symbol_funcs "fac"  (lambda (stack) nil))
+  (.<! symbol_funcs "_NIL" (lambda (stack) nil)))
+
+
 
 ; stack is just a list. end of the list is the top of the stack
 ; area is a list with for values: '(x y width height)
