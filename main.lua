@@ -3,7 +3,7 @@ if not table.unpack then table.unpack = unpack end
 local load = load if _VERSION:find("5.1") then load = function(x, n, _, env) local f, e = loadstring(x, n) if not f then return f, e end if env then setfenv(f, env) end return f end end
 local _select, _unpack, _pack, _error = select, table.unpack, table.pack, error
 local _libs = {}
-local _3d_1, _3c_1, _3c3d_1, _3e3d_1, _2b_1, _2d_1, _2a_1, _2f_1, expt1, _2e2e_1, len_23_1, getIdx1, setIdx_21_1, arg_23_1, error1, print1, require1, setmetatable1, tonumber1, tostring1, type_23_1, format1, len1, sub1, n1, _2a_arguments_2a_1, type1, traceback1, demandFailure_2d3e_string1, _2a_demandFailureMt_2a_1, demandFailure1, acos1, asin1, atan1, cos1, exp1, log1, sin1, sqrt1, tan1, nth1, push_21_1, popLast_21_1, read1, write1, mode1, ps1, getKey1, sc1, cls1, v_5f_line1, h_5f_line11, h_5f_line21, h_5f_line31, buttons1, numbers1, factorial1, symbol_5f_funcs1, print_5f_nstack_5f_r1, number_5f_entry1, stack1, entryNumber1, home1
+local _3d_1, _3c_1, _3c3d_1, _3e3d_1, _2b_1, _2d_1, _2a_1, _2f_1, expt1, _2e2e_1, len_23_1, getIdx1, setIdx_21_1, arg_23_1, error1, print1, require1, setmetatable1, tonumber1, tostring1, type_23_1, format1, len1, sub1, n1, _2a_arguments_2a_1, type1, traceback1, demandFailure_2d3e_string1, _2a_demandFailureMt_2a_1, demandFailure1, acos1, asin1, atan1, cos1, exp1, log1, sin1, sqrt1, tan1, nth1, push_21_1, popLast_21_1, read1, write1, mode1, ps1, getKey1, sc1, cls1, v_5f_line1, h_5f_line11, h_5f_line21, h_5f_line31, buttons1, numbers1, func_5f_symbols1, factorial1, symbol_5f_funcs_21_1, print_5f_nstack_5f_r1, number_5f_entry1, symbol_5f_entry1, stack1, entryNumber1, home1
 _3d_1 = function(v1, v2) return v1 == v2 end
 _3c_1 = function(v1, v2) return v1 < v2 end
 _3c3d_1 = function(v1, v2) return v1 <= v2 end
@@ -158,6 +158,7 @@ numbers1["h"] = 0
 numbers1["t"] = 1
 numbers1["n"] = 2
 numbers1["s"] = 3
+func_5f_symbols1 = {tag="list", n=3, {tag="list", n=2, {tag="symbol", contents="quote"}, {tag="list", n=8, "add", "min", "mul", "div", "pow", "sqrt", "sqr", "inv"}}, {tag="list", n=2, {tag="symbol", contents="quote"}, {tag="list", n=8, "sin", "cos", "tan", "_NIL", "asin", "acos", "atan", "_NIL"}}, {tag="list", n=2, {tag="symbol", contents="quote"}, {tag="list", n=8, "log", "10xp", "ln", "exp", "fac", "_NIL", "_NIL", "_NIL"}}}
 factorial1 = function(n)
   if n <= 0 then
     return 1
@@ -165,79 +166,79 @@ factorial1 = function(n)
     return n * factorial1(n - 1)
   end
 end
-symbol_5f_funcs1 = {}
-symbol_5f_funcs1["add"] = function(stack)
-  return push_21_1(stack, popLast_21_1(stack) + popLast_21_1(stack))
+symbol_5f_funcs_21_1 = {}
+symbol_5f_funcs_21_1["add"] = function(s)
+  return push_21_1(s, popLast_21_1(s) + popLast_21_1(s))
 end
-symbol_5f_funcs1["min"] = function(stack)
-  local b, a = popLast_21_1(stack), popLast_21_1(stack)
-  return push_21_1(stack, a - b)
+symbol_5f_funcs_21_1["min"] = function(s)
+  local b, a = popLast_21_1(s), popLast_21_1(s)
+  return push_21_1(s, a - b)
 end
-symbol_5f_funcs1["mul"] = function(stack)
-  return push_21_1(stack, popLast_21_1(stack) * popLast_21_1(stack))
+symbol_5f_funcs_21_1["mul"] = function(s)
+  return push_21_1(s, popLast_21_1(s) * popLast_21_1(s))
 end
-symbol_5f_funcs1["div"] = function(stack)
-  local b, a = popLast_21_1(stack), popLast_21_1(stack)
-  return push_21_1(stack, a / b)
+symbol_5f_funcs_21_1["div"] = function(s)
+  local b, a = popLast_21_1(s), popLast_21_1(s)
+  return push_21_1(s, a / b)
 end
-symbol_5f_funcs1["pow"] = function(stack)
-  local b, a = popLast_21_1(stack), popLast_21_1(stack)
-  return push_21_1(stack, a ^ b)
+symbol_5f_funcs_21_1["pow"] = function(s)
+  local b, a = popLast_21_1(s), popLast_21_1(s)
+  return push_21_1(s, a ^ b)
 end
-symbol_5f_funcs1["sqrt"] = function(stack)
-  return push_21_1(stack, sqrt1(popLast_21_1(stack)))
+symbol_5f_funcs_21_1["sqrt"] = function(s)
+  return push_21_1(s, sqrt1(popLast_21_1(s)))
 end
-symbol_5f_funcs1["sqr"] = function(stack)
-  return push_21_1(stack, popLast_21_1(stack) ^ 2)
+symbol_5f_funcs_21_1["sqr"] = function(s)
+  return push_21_1(s, popLast_21_1(s) ^ 2)
 end
-symbol_5f_funcs1["inv"] = function(stack)
-  return push_21_1(stack, 1 / popLast_21_1(stack))
+symbol_5f_funcs_21_1["inv"] = function(s)
+  return push_21_1(s, 1 / popLast_21_1(s))
 end
-symbol_5f_funcs1["sin"] = function(stack)
-  return push_21_1(stack, sin1(popLast_21_1(stack)))
+symbol_5f_funcs_21_1["sin"] = function(s)
+  return push_21_1(s, sin1(popLast_21_1(s)))
 end
-symbol_5f_funcs1["cos"] = function(stack)
-  return push_21_1(stack, cos1(popLast_21_1(stack)))
+symbol_5f_funcs_21_1["cos"] = function(s)
+  return push_21_1(s, cos1(popLast_21_1(s)))
 end
-symbol_5f_funcs1["tan"] = function(stack)
-  return push_21_1(stack, tan1(popLast_21_1(stack)))
+symbol_5f_funcs_21_1["tan"] = function(s)
+  return push_21_1(s, tan1(popLast_21_1(s)))
 end
-symbol_5f_funcs1["asin"] = function(stack)
-  return push_21_1(stack, asin1(popLast_21_1(stack)))
+symbol_5f_funcs_21_1["asin"] = function(s)
+  return push_21_1(s, asin1(popLast_21_1(s)))
 end
-symbol_5f_funcs1["acos"] = function(stack)
-  return push_21_1(stack, acos1(popLast_21_1(stack)))
+symbol_5f_funcs_21_1["acos"] = function(s)
+  return push_21_1(s, acos1(popLast_21_1(s)))
 end
-symbol_5f_funcs1["atan"] = function(stack)
-  return push_21_1(stack, atan1(popLast_21_1(stack)))
+symbol_5f_funcs_21_1["atan"] = function(s)
+  return push_21_1(s, atan1(popLast_21_1(s)))
 end
-symbol_5f_funcs1["log10"] = function(stack)
-  return push_21_1(stack, log1(popLast_21_1(stack), 10))
+symbol_5f_funcs_21_1["log10"] = function(s)
+  return push_21_1(s, log1(popLast_21_1(s), 10))
 end
-symbol_5f_funcs1["10xp"] = function(stack)
-  return push_21_1(stack, 10 ^ popLast_21_1(stack))
+symbol_5f_funcs_21_1["10xp"] = function(s)
+  return push_21_1(s, 10 ^ popLast_21_1(s))
 end
-symbol_5f_funcs1["ln"] = function(stack)
-  return push_21_1(stack, log1(popLast_21_1(stack)))
+symbol_5f_funcs_21_1["ln"] = function(s)
+  return push_21_1(s, log1(popLast_21_1(s)))
 end
-symbol_5f_funcs1["exp"] = function(stack)
-  return push_21_1(stack, exp1(popLast_21_1(stack)))
+symbol_5f_funcs_21_1["exp"] = function(s)
+  return push_21_1(s, exp1(popLast_21_1(s)))
 end
-symbol_5f_funcs1["fac"] = function(stack)
-  return push_21_1(stack, factorial1(popLast_21_1(stack)))
+symbol_5f_funcs_21_1["fac"] = function(s)
+  return push_21_1(s, factorial1(popLast_21_1(s)))
 end
-symbol_5f_funcs1["_NIL"] = function(stack)
+symbol_5f_funcs_21_1["_NIL"] = function(s)
   return nil
 end
-print_5f_nstack_5f_r1 = function(stack, area)
+print_5f_nstack_5f_r1 = function(s, area)
   local x, y, w, h = nth1(area, 1), nth1(area, 2), nth1(area, 3), nth1(area, 4)
-  local start, forLimit = n1(stack) - h, n1(stack)
+  local start, forLimit = n1(s) - h, n1(s)
   local i = start
   while i <= forLimit do
-    if len1(tostring1(nth1(stack, i))) < w then
-      ps1(x, y + (i - start), format1("%" .. w .. "d", nth1(stack, i)))
+    if len1(tostring1(nth1(s, i))) < w then
+      ps1(x, y + (i - start), format1("%" .. w .. "d", nth1(s, i)))
     else
-      ps1(x, y + (i - start), format1("%1." .. w - 7 .. "e", nth1(stack, i)))
+      ps1(x, y + (i - start), format1("%1." .. w - 7 .. "e", nth1(s, i)))
     end
     i = i + 1
   end
@@ -259,6 +260,40 @@ number_5f_entry1 = function()
   print1(a, b)
   return numbers1[a] + numbers1[b]
 end
+symbol_5f_entry1 = function(l, s)
+  ps1(3, 3, "[a] " .. nth1(nth1(func_5f_symbols1, l), 1))
+  ps1(3, 4, "[o] " .. nth1(nth1(func_5f_symbols1, l), 2))
+  ps1(3, 5, "[e] " .. nth1(nth1(func_5f_symbols1, l), 3))
+  ps1(3, 6, "[u] " .. nth1(nth1(func_5f_symbols1, l), 4))
+  ps1(12, 3, "[h] " .. nth1(nth1(func_5f_symbols1, l), 5))
+  ps1(12, 4, "[t] " .. nth1(nth1(func_5f_symbols1, l), 6))
+  ps1(12, 5, "[n] " .. nth1(nth1(func_5f_symbols1, l), 7))
+  ps1(12, 6, "[s] " .. nth1(nth1(func_5f_symbols1, l), 8))
+  ps1(7, 7, "[ ] Next")
+  local str = read1("*l")
+  if str == "a" then
+    symbol_5f_funcs_21_1[nth1(nth1(func_5f_symbols1, l), 1)](s)
+  elseif str == "o" then
+    symbol_5f_funcs_21_1[nth1(nth1(func_5f_symbols1, l), 2)](s)
+  elseif str == "e" then
+    symbol_5f_funcs_21_1[nth1(nth1(func_5f_symbols1, l), 3)](s)
+  elseif str == "u" then
+    symbol_5f_funcs_21_1[nth1(nth1(func_5f_symbols1, l), 4)](s)
+  elseif str == "h" then
+    symbol_5f_funcs_21_1[nth1(nth1(func_5f_symbols1, l), 5)](s)
+  elseif str == "t" then
+    symbol_5f_funcs_21_1[nth1(nth1(func_5f_symbols1, l), 6)](s)
+  elseif str == "n" then
+    symbol_5f_funcs_21_1[nth1(nth1(func_5f_symbols1, l), 7)](s)
+  elseif str == "s" then
+    symbol_5f_funcs_21_1[nth1(nth1(func_5f_symbols1, l), 8)](s)
+  elseif str == " " then
+    symbol_5f_entry1()
+  else
+    _error("unmatched item")
+  end
+  return nil
+end
 stack1 = {tag="list", n=0}
 push_21_1(stack1, 0)
 push_21_1(stack1, 0)
@@ -276,7 +311,7 @@ push_21_1(stack1, 0)
 entryNumber1 = "0"
 home1 = {}
 home1[buttons1["SYM"]] = function()
-  return nil
+  return symbol_5f_entry1(1)
 end
 home1[buttons1["NUM"]] = function()
   entryNumber1 = entryNumber1 .. tostring1(number_5f_entry1())
